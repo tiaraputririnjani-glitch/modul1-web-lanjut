@@ -36,34 +36,30 @@ class MahasiswaController extends Controller
         return redirect()->route('mahasiswa.index')->with('success', 'Data Berhasil Disimpan!');
     }
 
-    // 4. Tampil Form Edit (Tugas Mandiri No. 1)
+    
     public function edit(string $id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
         return view('mahasiswa.edit', compact('mahasiswa'));
     }
 
-    // 5. Simpan Perubahan (Update - Tugas Mandiri No. 1)
-    public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'nama' => 'required',
-            'kelas' => 'required',
-            'matakuliah' => 'required',
-        ]);
+    
+    public function update(Request $request, $nim) 
+{ 
+    $request->validate([ 
+        'nama' => 'required', 
+        'kelas' => 'required', 
+        'matakuliah' => 'required' 
+    ]); 
+ 
+    $mahasiswa = Mahasiswa::findOrFail($nim); 
+    $mahasiswa->update($request->all());      return redirect()->route('mahasiswa.index')         ->with('success', 'Data mahasiswa berhasil diperbarui'); 
+} 
 
-        $mahasiswa = Mahasiswa::findOrFail($id);
-        $mahasiswa->update($request->only(['nama', 'kelas', 'matakuliah']));
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Data Berhasil Diperbarui!');
-    }
+    public function destroy($nim) { 
+    Mahasiswa::destroy($nim); 
+    return redirect()->route('mahasiswa.index') 
+        ->with('success', 'Data mahasiswa berhasil dihapus'); } 
 
-    // 6. Hapus Data (Delete - Tugas Mandiri No. 1)
-    public function destroy(string $id)
-    {
-        $mahasiswa = Mahasiswa::findOrFail($id);
-        $mahasiswa->delete();
-
-        return redirect()->route('mahasiswa.index')->with('success', 'Data Berhasil Dihapus!');
-    }
 }

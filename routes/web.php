@@ -13,3 +13,7 @@ use App\Http\Controllers\MahasiswaController;
 
 Route::resource('mahasiswa', MahasiswaController::class);
 
+use App\Http\Controllers\MataKuliahController;
+
+Route::resource('matakuliah', MataKuliahController::class);
+
