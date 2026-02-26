@@ -50,7 +50,7 @@
                             <td><strong>{{ $mahasiswa->nim }}</strong></td>
                             <td>{{ $mahasiswa->nama }}</td>
                             <td><span class="badge bg-primary">{{ $mahasiswa->kelas }}</span></td>
-                            <td>{{ $mahasiswa->matakuliah }}</td>
+                            <td>{{ $mahasiswa->matakuliah->nama_mk ?? 'Belum Pilih MK' }}</td>
                             <td class="text-center">
                                 <div class="btn-group" role="group">
                                     <a href="{{ route('mahasiswa.edit', $mahasiswa->nim) }}" class="btn btn-sm btn-edit">

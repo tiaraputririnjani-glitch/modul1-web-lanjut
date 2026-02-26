@@ -27,38 +27,41 @@
                             </div> 
                         @endif
 
-                        <form action="{{ route('matakuliah.store') }}" method="POST">
-                            @csrf
-                            
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Kode Mata Kuliah</label>
-                                <input type="text" name="kode_mk" class="form-control" placeholder="Contoh: MK001" value="{{ old('kode_mk') }}" required>
-                                <div class="form-text">Kode ini harus unik dan tidak boleh sama.</div>
-                            </div>
+                        <form action="{{ route('mahasiswa.store') }}" method="POST">
+    @csrf
+    
+    <div class="mb-3">
+        <label class="form-label fw-bold">NIM</label>
+        <input type="text" name="nim" class="form-control" placeholder="Contoh: 220101" value="{{ old('nim') }}" required>
+    </div>
 
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Nama Mata Kuliah</label>
-                                <input type="text" name="nama_mk" class="form-control" placeholder="Masukkan nama mata kuliah" value="{{ old('nama_mk') }}" required>
-                            </div>
+    <div class="mb-3">
+        <label class="form-label fw-bold">Nama Mahasiswa</label>
+        <input type="text" name="nama" class="form-control" placeholder="Masukkan nama lengkap" value="{{ old('nama') }}" required>
+    </div>
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">SKS (1 - 6)</label>
-                                    <input type="number" name="sks" class="form-control" min="1" max="6" value="{{ old('sks') }}" required>
-                                    <div class="form-text text-danger">* Maksimal 6 SKS sesuai aturan.</div> 
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Semester</label>
-                                    <input type="number" name="semester" class="form-control" min="1" max="8" value="{{ old('semester') }}" required>
-                                </div>
-                            </div>
+    <div class="mb-3">
+        <label class="form-label fw-bold">Kelas</label>
+        <input type="text" name="kelas" class="form-control" placeholder="Contoh: TI-A" value="{{ old('kelas') }}" required>
+    </div>
 
-                            <hr>
-                            <div class="d-flex justify-content-between">
-                                <a href="{{ route('matakuliah.index') }}" class="btn btn-secondary px-4">Kembali</a>
-                                <button type="submit" class="btn btn-success px-4 fw-bold">Simpan Mata Kuliah</button>
-                            </div>
-                        </form>
+    <label class="form-label fw-bold">Pilih Mata Kuliah</label>
+<select name="matakuliah_id" class="form-control" required>
+    <option value="">-- Pilih Mata Kuliah --</option>
+    @foreach($data_mk as $mk)
+        <option value="{{ $mk->id }}">{{ $mk->nama_mk }}</option>
+    @endforeach
+</select>
+
+        <div class="form-text">Mahasiswa akan terhubung dengan mata kuliah yang dipilih. [cite: 6]</div>
+    </div>
+
+    <hr>
+    <div class="d-flex justify-content-between">
+        <a href="{{ route('mahasiswa.index') }}" class="btn btn-secondary px-4">Kembali</a>
+        <button type="submit" class="btn btn-success px-4 fw-bold">Simpan Mahasiswa</button>
+    </div>
+</form>
 
                     </div>
                 </div>

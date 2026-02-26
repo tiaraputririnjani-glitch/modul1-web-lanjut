@@ -28,33 +28,20 @@
                         @endif
 
                         <form action="{{ route('mahasiswa.update', $mahasiswa->nim) }}" method="POST">
-                            @csrf
-                            @method('PUT') <div class="mb-3">
-                                <label class="form-label fw-bold">NIM (Primary Key)</label>
-                                <input type="text" name="nim" class="form-control bg-light" value="{{ $mahasiswa->nim }}" readonly>
-                                <small class="text-muted italic">* NIM tidak dapat diubah</small>
-                            </div>
+    @csrf
+    @method('PUT') <input type="text" name="nama" value="{{ $mahasiswa->nama }}" class="form-control">
+    <input type="text" name="kelas" value="{{ $mahasiswa->kelas }}" class="form-control">
 
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Nama Lengkap</label>
-                                <input type="text" name="nama" class="form-control" value="{{ old('nama', $mahasiswa->nama) }}" required>
-                            </div>
+    <select name="matakuliah_id" class="form-control">
+        @foreach($data_mk as $mk)
+            <option value="{{ $mk->id }}" {{ $mahasiswa->matakuliah_id == $mk->id ? 'selected' : '' }}>
+                {{ $mk->nama_mk }}
+            </option>
+        @endforeach
+    </select>
 
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Kelas</label>
-                                <input type="text" name="kelas" class="form-control" value="{{ old('kelas', $mahasiswa->kelas) }}" required>
-                            </div>
+    <button type="submit" class="btn btn-primary">Update Data</button>
 
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Mata Kuliah</label>
-                                <input type="text" name="matakuliah" class="form-control" value="{{ old('matakuliah', $mahasiswa->matakuliah) }}" required>
-                            </div>
-                            
-                            <hr>
-                            <div class="d-flex justify-content-between">
-                                <a href="{{ route('mahasiswa.index') }}" class="btn btn-secondary px-4">Kembali</a>
-                                <button type="submit" class="btn btn-warning px-4 fw-bold">Update Data</button>
-                            </div>
                         </form>
                     </div>
                 </div>

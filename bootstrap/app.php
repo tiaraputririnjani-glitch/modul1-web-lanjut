@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // Daftarkan alias middleware kamu di sini
+        $middleware->alias([
+            'check.email' => \App\Http\Middleware\CheckEmailKampus::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

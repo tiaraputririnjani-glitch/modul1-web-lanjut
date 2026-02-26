@@ -2,64 +2,66 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use App\Models\Matakuliah;
+use Illuminate\Http\Request;
 
-class MahasiswaController extends Controller
-{
-    // 1. Tampil Tabel Utama
-    public function index()
-    {
-        $mahasiswas = Mahasiswa::all(); 
+class MahasiswaController extends Controller {
+
+    public function index() {
+        // Mengambil data mahasiswa beserta relasi matakuliahnya
+        $mahasiswas = Mahasiswa::with('matakuliah')->get();
         return view('mahasiswa.index', compact('mahasiswas'));
     }
 
-    // 2. Tampil Form Tambah
-    public function create()
-    {
-        return view('mahasiswa.create');
+    public function create() {
+        $data_mk = Matakuliah::all(); 
+        return view('mahasiswa.create', compact('data_mk'));
     }
 
-    // 3. Simpan Data Baru (Sudah ada Validasi NIM Unik - Tugas Mandiri No. 2)
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+        // 1. Validasi: Tambahkan 'kelas' dan 'matakuliah_id' agar tidak error 'Internal Server Error'
         $request->validate([
-            'nim' => 'required|unique:mahasiswas,nim', // NIM wajib diisi & tidak boleh kembar
+            'nim' => 'required|unique:mahasiswas',
             'nama' => 'required',
             'kelas' => 'required',
-            'matakuliah' => 'required',
+            'matakuliah_id' => 'required|exists:matakuliahs,id'
         ]);
 
-        // Gunakan only agar aman dari error _token
-        Mahasiswa::create($request->only(['nim', 'nama', 'kelas', 'matakuliah']));
+        // 2. Mencatat ID User: Sangat penting agar kolom 'user_id' tidak kosong
+        $data = $request->all();
+        $data['user_id'] = auth()->id(); 
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Data Berhasil Disimpan!');
+        Mahasiswa::create($data);
+        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil ditambahkan');
     }
 
-    
-    public function edit(string $id)
+    public function edit($id) // Gunakan ID atau primary key yang sesuai di database
+    {
+        $mahasiswa = Mahasiswa::findOrFail($id); 
+        $data_mk = Matakuliah::all();
+        return view('mahasiswa.edit', compact('mahasiswa', 'data_mk'));
+    }
+
+    public function update(Request $request, $id) 
+    {
+        $request->validate([
+            'nama' => 'required',
+            'kelas' => 'required',
+            'matakuliah_id' => 'required|exists:matakuliahs,id'
+        ]);
+
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        $mahasiswa->update($request->all()); 
+
+        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil diperbarui');
+    }
+
+    public function destroy($id) 
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
-        return view('mahasiswa.edit', compact('mahasiswa'));
+        $mahasiswa->delete(); 
+        
+        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil dihapus');
     }
-
-    
-    public function update(Request $request, $nim) 
-{ 
-    $request->validate([ 
-        'nama' => 'required', 
-        'kelas' => 'required', 
-        'matakuliah' => 'required' 
-    ]); 
- 
-    $mahasiswa = Mahasiswa::findOrFail($nim); 
-    $mahasiswa->update($request->all());      return redirect()->route('mahasiswa.index')         ->with('success', 'Data mahasiswa berhasil diperbarui'); 
-} 
-
-
-    public function destroy($nim) { 
-    Mahasiswa::destroy($nim); 
-    return redirect()->route('mahasiswa.index') 
-        ->with('success', 'Data mahasiswa berhasil dihapus'); } 
-
 }
